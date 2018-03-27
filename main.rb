@@ -35,4 +35,10 @@ count_conditional_operators = 0
 lexemes.each { |lexeme| count_conditional_operators += 1 if VHDL_CONDITIONAL_OPERATORS.include? lexeme}
 
 # puts lexemes
-puts count_conditional_operators
+# puts count_conditional_operators
+
+require './graph'
+control_graph = Graph.new
+control_graph[1][2] = 3
+puts control_graph[1][2]
+puts control_graph.rows
