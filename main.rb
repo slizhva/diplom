@@ -32,9 +32,7 @@ require './lexeme'
 lexeme_obj = Lexeme.new
 lexemes = lexeme_obj.get_project_lexemes(PROJECT_PATH, VHDL_LEXEME_REGULAR_EXPRESSION)
 count_conditional_operators = 0
-lexemes.each { |lexeme|
-  count_conditional_operators += 1 if VHDL_CONDITIONAL_OPERATORS.include? lexeme
-}
+lexemes.each { |lexeme| count_conditional_operators += 1 if VHDL_CONDITIONAL_OPERATORS.include? lexeme}
 
 # puts lexemes
 puts count_conditional_operators
