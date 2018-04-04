@@ -5,8 +5,8 @@ require './metrics'
 # VHDL Metrics class
 class VhdlMetrics < Metrics
 
-  LEXEME_REGULAR_EXPRESSION = /[A-Za-z_]+[A-Za-z_\d\.]*/
-  ONELINE_COMMENTS_REGULAR_EXPRESSION = /--[A-Za-z_\d\. ]*/
+  LEXEME_REGULAR_EXPRESSION = /[A-Za-z_]+[A-Za-z_\d.]*/
+  ONELINE_COMMENTS_REGULAR_EXPRESSION = /--[A-Za-z_\d. ]*/
 
   RESERVED_WORDS = Array[
       'abs',          'configuration', 'impure',   'null',      'rem',      'type',
