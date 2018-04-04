@@ -1,0 +1,93 @@
+-------------------------------------------------------
+-- Design Name : lfsr_implement
+-- File Name   : lfsr_implement.vhd
+-- Function    : Use of the lfsr package
+-- Coder       : Alexander H Pham (VHDL)
+-------------------------------------------------------
+library ieee;
+    use ieee.std_logic_1164.all;
+    use work.lfsr_pkg.all;
+
+entity lfsr_implement is
+    port (
+        clk    :in  std_logic;
+        rst    :in  std_logic;
+        lfsr_1 :out std_logic_vector (7 downto 0);
+        lfsr_2 :out std_logic_vector (7 downto 0)
+    );
+end entity;
+
+architecture rtl of lfsr_implement is
+    constant taps   :std_logic_vector (7 to 0) := "10001110";
+    signal   lfsr_a :std_logic_vector (7 downto 0);
+    signal   lfsr_b :std_logic_vector (7 downto 0);
+
+begin
+
+    process (clk, rst) begin
+        if (rst = '1') then
+            lfsr_a <=  (others=>'0');
+            lfsr_b <=  (others=>'0');
+        elsif (rising_edge(clk)) then
+            lfsr_a <= many_to_one_fb (lfsr_a, taps);
+            lfsr_b <= one_to_many_fb (lfsr_b, taps);
+        end if;
+    end process;
+
+    lfsr_1 <= lfsr_a;
+    lfsr_2 <= lfsr_b;
+end architecture;
+
+------------------------------------------------------------------------------
+--  TEST BENCH
+------------------------------------------------------------------------------
+library ieee;
+    use ieee.std_logic_1164.all;
+    use ieee.std_logic_unsigned.all;
+    use ieee.std_logic_textio.all;
+    use std.textio.all;
+
+entity lfsr_tb is
+end entity;
+architecture test of lfsr_tb is
+
+    signal clk    :std_logic := '0';
+    signal rst    :std_logic := '1';
+    signal lfsr_1 :std_logic_vector (7 downto 0);
+    signal lfsr_2 :std_logic_vector (7 downto 0);
+    
+    component lfsr_implement is
+    port (
+        clk    :in  std_logic;
+        rst    :in  std_logic;
+        lfsr_1 :out std_logic_vector (7 downto 0);
+        lfsr_2 :out std_logic_vector (7 downto 0)
+    );
+    end component;
+begin
+
+    -- Generate clock
+    clk <= not clk after 10 ns;
+    rst <= '0' after 3 ns;
+
+    Inst_lfsr : lfsr_implement
+    port map (
+        clk    => clk,   
+        rst    => rst,
+        lfsr_1 => lfsr_1,
+        lfsr_2 => lfsr_2
+    );
+
+    -- Display the time and result
+    process (clk)
+        variable wrbuf :line;
+    begin
+        if (clk = '1') then
+            write(wrbuf, string'("Time: ")); write(wrbuf, now);
+            write(wrbuf, string'("; lfsr_1: ")); write(wrbuf, conv_integer(lfsr_1));
+            write(wrbuf, string'("; lfsr_2: ")); write(wrbuf, conv_integer(lfsr_2));
+            writeline(output, wrbuf);
+        end if;
+    end process;
+
+end architecture;
