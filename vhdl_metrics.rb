@@ -32,7 +32,7 @@ class VhdlMetrics < Metrics
       'if', 'for', 'elsif', 'while', 'until'
   ]
 
-  ENITY_COMPONENTS = Array[
+  ENTITY_COMPONENTS = Array[
       'port', 'generic'
   ]
 
@@ -60,7 +60,7 @@ class VhdlMetrics < Metrics
   end
 
   def count_entity_components(file_content)
-    count_operators(file_content, ENITY_COMPONENTS)
+    count_operators(file_content, ENTITY_COMPONENTS)
   end
 
   def count_architecture_components(file_content)
@@ -69,14 +69,16 @@ class VhdlMetrics < Metrics
   end
 
   def count_signals(file_content)
-    # file_content.scan(/std_logic[;(\s*:=)]/).count
-    count_signals = 0
-    puts signal_logic_vectors = file_content.scan(/std_logic_vector\s*\(\s*\d\s*downto\s*\d\s*\)\s*[;:)]/)
-    # signal_logic_vectors.each { |signal_logic_vector|
-    #   vector = signal_logic_vector.scan(/\d/)
-    #   count_signals += vector[0].to_i - vector[1].to_i + 1
-    # }
-    # puts count_signals
+    count_logic_signals = file_content.scan(/std_logic[;(\s*:=)]/).count
+
+    count_logic_vector_signals = 0
+    signal_logic_vectors = file_content.scan(/(std_logic_vector\s*\(\s*\d\s*(?:downto|to)\s*\d\s*\)\s*[;:)])/)
+    signal_logic_vectors.each { |signal_logic_vector|
+      vector = signal_logic_vector.to_s.scan(/\d/)
+      count_logic_vector_signals += (vector[0].to_i - vector[1].to_i).abs + 1
+    }
+
+    count_logic_vector_signals + count_logic_signals
   end
 
 end

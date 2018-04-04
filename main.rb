@@ -22,5 +22,4 @@ puts 'amount of comments: ' + metric.amount_of_oneline_comments(file_content).to
 puts 'count operators: ' + metric.count_operators(file_content).to_s
 puts 'count of entity components: ' + metric.count_entity_components(file_content).to_s
 puts 'count of architecture components: ' + metric.count_architecture_components(file_content).to_s
-
- metric.count_signals(file_content)
+puts metric.count_signals(file_content)
