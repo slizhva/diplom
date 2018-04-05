@@ -5,7 +5,7 @@ require './metrics'
 # VHDL Metrics class
 class VhdlMetrics < Metrics
 
-  LEXEME_REGULAR_EXPRESSION = /[A-Za-z_]+[A-Za-z_\d.]*/
+  LEXEME_REGULAR_EXPRESSION = /[A-Za-z_]+[A-Za-z_\d.]*|<=/
   ONELINE_COMMENTS_REGULAR_EXPRESSION = /--[A-Za-z_\d. ]*/
 
   RESERVED_WORDS = Array[
@@ -40,6 +40,10 @@ class VhdlMetrics < Metrics
       'component'
   ]
 
+  SIGNAL_ASSIGNMENT_OPERATORS= Array[
+      '<='
+  ]
+
   def file_lexemes(file_path)
     super(file_path, LEXEME_REGULAR_EXPRESSION)
   end
@@ -72,13 +76,20 @@ class VhdlMetrics < Metrics
     count_logic_signals = file_content.scan(/std_logic[;(\s*:=)]/).count
 
     count_logic_vector_signals = 0
-    signal_logic_vectors = file_content.scan(/(std_logic_vector\s*\(\s*\d\s*(?:downto|to)\s*\d\s*\)\s*[;:)])/)
+    signal_logic_vectors = file_content.scan(
+        /std_logic_vector\s*\(\s*\d\s*downto\s*\d\s*\)\s*[;:)]|std_logic_vector\s*\(\s*\d\s*to\s*\d\s*\)\s*[;:)]/
+    )
     signal_logic_vectors.each { |signal_logic_vector|
-      vector = signal_logic_vector.to_s.scan(/\d/)
+      vector = signal_logic_vector.scan(/\d/)
       count_logic_vector_signals += (vector[0].to_i - vector[1].to_i).abs + 1
     }
 
     count_logic_vector_signals + count_logic_signals
   end
+
+  def signal_assignment_operators_count(file_content)
+    count_operators(file_content, SIGNAL_ASSIGNMENT_OPERATORS)
+  end
+
 
 end
