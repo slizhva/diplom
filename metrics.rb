@@ -38,8 +38,7 @@ class Metrics
   # @return int
   def amount_of_oneline_comments(file_content, start_tag, end_tag)
     comments = file_content.scan(/#{start_tag}.*#{end_tag}/)
-    require 'json'
-    comments.to_json.length.to_f / file_content.to_json.length * 100
+    comments.join("").length.to_f / file_content.length * 100
   end
 
 end
