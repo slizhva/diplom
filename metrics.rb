@@ -3,28 +3,7 @@
 # Metrics class
 class Metrics
 
-  # get lexemes from file
-  #
-  # @param file_content       string
-  # @param regular_expression string
-  # @return array
-  def file_lexemes(file_content, regular_expression)
-    file_content.scan(regular_expression)
-  end
-
-  # get project lexemes by path
-  #
-  # @param project_path       string
-  # @param regular_expression string
-  # @return array
-  def project_lexemes(project_path, regular_expression)
-    files_path =  Dir.glob(project_path + '/**/*').select{ |file_path| File.file? file_path }
-    project_lexemes = Array[]
-    files_path.each { |file_path| project_lexemes += self.file_lexemes(file_path, regular_expression)}
-    project_lexemes
-  end
-
-  # get project count lines
+  # get file count lines
   #
   # @param file_content string
   # @return int

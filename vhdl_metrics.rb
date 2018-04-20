@@ -5,47 +5,46 @@ require './metrics'
 # VHDL Metrics class
 class VhdlMetrics < Metrics
 
-  LEXEME_REGULAR_EXPRESSION = /[A-Za-z_]+[A-Za-z_\d.]*|<=/
-  ONELINE_COMMENTS_REGULAR_EXPRESSION = /--[A-Za-z_\d. ]*/
+  LEXEME_REGULAR_EXP = /[A-Za-z_]+[A-Za-z_\d.]*|<=/
 
   RESERVED_WORDS = Array[
-      'abs',          'configuration', 'impure',   'null',      'rem',      'type',
-      'access',       'constant',      'in',       'of',        'report',   'unaffected',
-      'after',        'disconnect',    'inertial', 'on',        'return',   'units',
-      'alias',        'downto',        'inout',    'open',      'rol',      'until',
-      'all',          'else',          'is',       'or',        'ror',      'use',
-      'and',          'elsif',         'label',    'others',    'select',   'variable',
-      'architecture', 'end',           'library',  'out',       'severity', 'wait',
-      'array',        'entity',        'linkage',  'package',   'signal',   'when',
-      'assert',       'exit',          'literal',  'port',      'shared',   'while',
-      'attribute',    'file',          'loop',     'postponed', 'sla',      'with',
-      'begin',        'for',           'map',      'procedure', 'sll',      'xnor',
-      'block',        'function',      'mod',      'process',   'sra',      'xor',
-      'body',         'generate',      'nand',     'pure',      'srl',
-      'buffer',       'generic',       'new',      'range',     'subtype',
-      'bus',          'group',         'next',     'record',    'then',
-      'case',         'guarded',       'nor',      'register',  'to',
-      'component',    'if',            'not',      'reject',    'transport'
+    'abs',          'configuration', 'impure',   'null',      'rem',      'type',
+    'access',       'constant',      'in',       'of',        'report',   'unaffected',
+    'after',        'disconnect',    'inertial', 'on',        'return',   'units',
+    'alias',        'downto',        'inout',    'open',      'rol',      'until',
+    'all',          'else',          'is',       'or',        'ror',      'use',
+    'and',          'elsif',         'label',    'others',    'select',   'variable',
+    'architecture', 'end',           'library',  'out',       'severity', 'wait',
+    'array',        'entity',        'linkage',  'package',   'signal',   'when',
+    'assert',       'exit',          'literal',  'port',      'shared',   'while',
+    'attribute',    'file',          'loop',     'postponed', 'sla',      'with',
+    'begin',        'for',           'map',      'procedure', 'sll',      'xnor',
+    'block',        'function',      'mod',      'process',   'sra',      'xor',
+    'body',         'generate',      'nand',     'pure',      'srl',
+    'buffer',       'generic',       'new',      'range',     'subtype',
+    'bus',          'group',         'next',     'record',    'then',
+    'case',         'guarded',       'nor',      'register',  'to',
+    'component',    'if',            'not',      'reject',    'transport'
   ]
 
   CONDITIONAL_OPERATORS = Array[
-      'if', 'for', 'elsif', 'while', 'until'
+    'if', 'for', 'elsif', 'while', 'until'
   ]
 
   ENTITY_COMPONENTS = Array[
-      'port', 'generic'
+    'port', 'generic'
   ]
 
   ARCHITECTURE_COMPONENTS= Array[
-      'component'
+    'component'
   ]
 
   SIGNAL_ASSIGNMENT_OPERATORS= Array[
-      '<='
+    '<='
   ]
 
-  def file_lexemes(file_path)
-    super(file_path, LEXEME_REGULAR_EXPRESSION)
+  def file_lexemes(file_content)
+    file_content.scan(LEXEME_REGULAR_EXP)
   end
 
   def count_conditional_operators(file_content)
@@ -91,5 +90,20 @@ class VhdlMetrics < Metrics
     count_operators(file_content, SIGNAL_ASSIGNMENT_OPERATORS)
   end
 
+  def control_graph(project_path)
+    control_graph = []
+    branch_number = 0
+    # files_path =  Dir.glob(project_path + '/**/*').select{ |file_path| File.file? file_path }
+    # files_path.each { |file_path|
+    #
+    #   puts File.read(file_path).scan(/architecture Behavioral of (.*)end Behavioral/m)
+    #   puts File.read(file_path).scan(/architecture Behavioral of (.*)end Behavioral/m)
+    #   control_graph[branch_number += 1] = [2,3]
+    #   control_graph[branch_number += 1] = [3,4]
+    #   puts control_graph
+    # }
+    architecture = File.read('vhdl/FPGA_Webserver/hdl/main_design.vhd').scan(/(architecture Behavioral of.*end Behavioral;)/m)
+    # architectureName = architecture.scan(/architecture Behavioral of main_design is/)
+  end
 
 end
