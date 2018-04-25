@@ -93,17 +93,13 @@ class VhdlMetrics < Metrics
   def control_graph(project_path)
     control_graph = []
     branch_number = 0
-    # files_path =  Dir.glob(project_path + '/**/*').select{ |file_path| File.file? file_path }
-    # files_path.each { |file_path|
-    #
-    #   puts File.read(file_path).scan(/architecture Behavioral of (.*)end Behavioral/m)
-    #   puts File.read(file_path).scan(/architecture Behavioral of (.*)end Behavioral/m)
-    #   control_graph[branch_number += 1] = [2,3]
-    #   control_graph[branch_number += 1] = [3,4]
-    #   puts control_graph
-    # }
-    architecture = File.read('vhdl/FPGA_Webserver/hdl/main_design.vhd').scan(/(architecture Behavioral of.*end Behavioral;)/m)
-    # architectureName = architecture.scan(/architecture Behavioral of main_design is/)
+    files_path =  Dir.glob(project_path + '/**/*').select{ |file_path| File.file? file_path }
+    files_path.each { |file_path|
+      architecture = File.read(file_path).scan(/(architecture Behavioral of.*end Behavioral;)/m)[0][0]
+      architecture_name = architecture.scan(/architecture Behavioral of (.*) is/)[0][0]
+      components = architecture.scan(/component (.*) is/)
+      components.each {|component| control_graph[branch_number += 1] = [architecture_name => component[0]]}
+    }
+    control_graph
   end
-
 end
