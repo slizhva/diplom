@@ -98,7 +98,11 @@ class VhdlMetrics < Metrics
       architecture = File.read(file_path).scan(/(architecture Behavioral of.*end Behavioral;)/m)[0][0]
       architecture_name = architecture.scan(/architecture Behavioral of (.*) is/)[0][0]
       components = architecture.scan(/component (.*) is/)
-      components.each {|component| control_graph[branch_number += 1] = [architecture_name => component[0]]}
+      if components.count === 0
+        control_graph[branch_number += 1] = [architecture_name => '']
+      else
+        components.each {|component| control_graph[branch_number += 1] = [architecture_name => component[0]]}
+      end
     }
     control_graph
   end

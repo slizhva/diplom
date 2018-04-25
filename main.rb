@@ -1,6 +1,5 @@
 #!/usr/bin/ruby -w
 
-
 PROJECT_PATH = 'vhdl/FPGA_Webserver/hdl'
 FILE_PATH = 'vhdl/Package_Implementation'
 
